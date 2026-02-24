@@ -3,6 +3,7 @@
 
 #include <pqxx/pqxx>
 #include <string>
+#include <vector>
 
 /**
  * @brief The Database_Manager class connects to and queries 
@@ -29,7 +30,14 @@ class Database_Manager
          */
         ~Database_Manager();
 
-        
+        /**
+         * @brief Insert a category into DB.
+         * 
+         * @param cat_name  Name of category.
+         * @return true     If insertion successful.  
+         * @return false    If insertion failed.
+         */
+        bool insert_category(std::vector<std::string> cat_names);
 };
 
 

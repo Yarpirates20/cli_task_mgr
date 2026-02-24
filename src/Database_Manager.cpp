@@ -2,9 +2,9 @@
 
 #include <iostream>
 
+using std::cerr;
 using std::cout;
 using std::endl;
-using std::cerr;
 
 /** @copydoc Database_Manager::Database_Manager(const std::string &conn_string) */
 Database_Manager::Database_Manager(const std::string &conn_string)
@@ -25,4 +25,29 @@ Database_Manager::Database_Manager(const std::string &conn_string)
 Database_Manager::~Database_Manager()
 {
     delete conn;
+}
+
+/** @copydoc Database_Manager::insert_category(std::string cat_name) */
+bool Database_Manager::insert_category(std::vector<std::string> cat_names)
+{
+    try
+    {
+        pqxx::work tx{*conn};
+        auto stream = pqxx::stream_to::table(tx, {"Category"}, {"Name"});
+
+        for (const auto &cat : cat_names)
+        {
+            stream << cat;
+        }
+
+        stream.complete();
+        tx.commit();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+
+    return true;
 }
