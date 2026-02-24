@@ -1,12 +1,20 @@
+/**
+ * @file main.cpp
+ * @brief 
+ * 
+ */
+
 #include "Database_Manager.hpp"
 
 #include <iostream>
 #include <string>
 
+// Prototypes
 std::string get_WSL_gateway();
 
 int main()
 {
+    // Retrieves host IP for WSL to connect to Postgres DB.
     std::string host_ip = get_WSL_gateway();
 
     if (host_ip.empty())
@@ -18,8 +26,17 @@ int main()
     std::string conn_str = "host=" + host_ip + " port=5432 user=postgres dbname=task_mgr password=Tyty5454@";
 
     std::cout << "Connecting to Windows Host at: " << host_ip << std::endl;
+
+    // Connect to DB
     Database_Manager db(conn_str);
     std::string db_conn("dbname=task_mgr user=postgres ");
+
+    // Add Categories
+    std::vector<std::string> categories { "Career", "Personal", "School", "Development", "Finance", "Backlog" };
+
+    db.insert_category(categories);
+
+
     return 0;
 }
 
