@@ -54,14 +54,13 @@ bool Database_Manager::insert_category(std::vector<std::string> cat_names)
     try
     {
         pqxx::work tx{*conn};
-       
+
         for (const auto &cat : cat_names)
         {
             tx.exec_params(
                 "INSERT INTO Category (CategoryName) VALUES ($1) "
                 "ON CONFLICT (CategoryName) DO NOTHING",
-                cat
-            );
+                cat);
         }
 
         tx.commit();
@@ -95,4 +94,25 @@ bool Database_Manager::add_category(const std::string &name)
 
     std::cout << "Successfully added Category: " << name << "\n";
     return true;
+}
+
+/** @copydoc Database_Manager::fetch_categories() */
+std::map<int, std::string> Database_Manager::fetch_categories()
+{
+    std::map<int, std::string> cats;
+    try
+    {
+        pqxx::work tx(*conn);
+
+        for (auto [id, name] : tx.query<int, std::string>("SELECT CategoryId, CategoryName FROM category"))
+        {
+            cats[id] = name;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    return cats;
 }

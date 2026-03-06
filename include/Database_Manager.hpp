@@ -54,6 +54,25 @@ class Database_Manager
          * @return false    Returns false if insert failed.
          */
         bool add_category(const std::string& name);
+
+        /**
+         * @brief Fetches all categories.
+         * 
+         * @return std::map Map of all categories & IDs.
+         */
+        std::map<int, std::string> fetch_categories();
+
+        /**
+         * @brief Deletes a category from DB.
+         * 
+         * Note: changes tasks linked to deleted category to 
+         * "Uncategorized".
+         * 
+         * @param category_id Numeric ID of category to delete. 
+         * @return true If deleted successfully.
+         * @return false Returns false if unable to delete.
+         */
+        bool delete_category(int category_id);
 };
 
 
